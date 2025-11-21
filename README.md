@@ -149,8 +149,9 @@ python camera_detector.py --model models/yolov5s.pt --source 0 --backend-url htt
 
 
 
-## Contributing
-- Fork → branch → PR. Add tests for inventory and detection reconciliation.
+## Collaborators
+- shr8769 —  https://github.com/shr8769
+- Tiruvijayakumar — https://github.com/tiruvijayakumar
 
 ## License
 MIT. Add a LICENSE file at repo root.
