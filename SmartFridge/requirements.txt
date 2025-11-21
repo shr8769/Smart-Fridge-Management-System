@@ -1,0 +1,16 @@
+# Project dependencies for the fridge environment
+Flask>=2.0
+flask-cors>=3.0
+PyMySQL>=1.0
+python-dotenv>=0.21
+cryptography>=40.0
+requests>=2.28.0
+google-generativeai>=0.3.0
+SpeechRecognition>=3.10.0
+pyttsx3>=2.90
+pyaudio>=0.2.13
+gtts>=2.5.0
+
+# Note: On Windows some packages (e.g., pyaudio, cryptography) may require
+# Visual C++ build tools or prebuilt wheels. If installation fails, follow
+# the error messages to install required build tools or use wheels.

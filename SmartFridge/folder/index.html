@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Smart Fridge System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ResponsiveVoice API for better Indian language support -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=jQZ2zSv7"></script>
+    
+    <style>
+        /* Professional Refrigerator-Inspired Color Scheme - Cool & Calming */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        :root{
+            /* Cool Refrigerator Palette - Inspired by modern appliances */
+            --ice-white: #f8fafb;
+            --frost-gray: #e8ecef;
+            --steel-light: #d1d9e0;
+            --steel: #b4bec7;
+            --steel-dark: #8b95a1;
+            --charcoal: #4a5568;
+            --charcoal-dark: #2d3748;
+            --deep-navy: #1a202c;
+            
+            /* Accent Colors - Fresh & Modern */
+            --mint-accent: #10b981;
+            --mint-light: #d1fae5;
+            --ocean-accent: #06b6d4;
+            --ocean-light: #cffafe;
+            --warning-orange: #f59e0b;
+            --danger-red: #ef4444;
+            
+            /* Semantic Colors */
+            --bg-primary: #f0f4f8;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        *{box-sizing:border-box;margin:0;padding:0}
+        
+        body{
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafb 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height:100vh;
+            padding:24px;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            line-height: 1.6;
+        }
+
+        /* Subtle pattern overlay */
+        body::before{
+            content:'';
+            position:fixed;
+            inset:0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+            pointer-events:none;
+            z-index:0;
+            opacity: 0.5;
+        }
+
+        .container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+
+        header{ 
+            text-align:left;
+            margin-bottom:32px;
+            padding: 28px 32px;
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--steel-light);
+            box-shadow: 0 2px 8px rgba(74, 85, 104, 0.08);
+        }
+        header h1{ 
+            font-size:2.5rem;
+            color: var(--charcoal);
+            font-weight:700;
+            letter-spacing:-1px;
+        }
+        header p{ 
+            color: var(--text-secondary);
+            margin-top:10px;
+            font-weight:500;
+            font-size: 1.05rem;
+        }
+
+        /* Professional refrigerator-inspired cards */
+        .card{
+            background: white;
+            border:1px solid var(--steel-light);
+            border-radius:16px;
+            padding:28px;
+            box-shadow: 
+                0 2px 8px rgba(74, 85, 104, 0.08),
+                0 1px 3px rgba(74, 85, 104, 0.05);
+            color: var(--text-primary);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 20px rgba(74, 85, 104, 0.12),
+                0 3px 6px rgba(74, 85, 104, 0.08);
+            border-color: var(--ocean-accent);
+        }
+
+        .stats-bar{display:flex;gap:16px;margin-bottom:24px}
+        .stat-card{
+            flex:1;
+            padding:24px;
+            border-radius:14px;
+            background: white;
+            border:1px solid var(--steel-light);
+            box-shadow: 0 2px 6px rgba(74, 85, 104, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(74, 85, 104, 0.1);
+            border-color: var(--mint-accent);
+        }
+        .stat-value{
+            font-size:2rem;
+            font-weight:700;
+            color: var(--charcoal);
+            letter-spacing: -0.5px;
+        }
+        .stat-label{
+            color: var(--text-secondary);
+            margin-top:8px;
+            font-weight:600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid{display:grid;grid-template-columns:1fr 420px;gap:20px}
+
+        .card-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--frost-gray);
+        }
+        .card-header h2{
+            font-size:1.35rem;
+            color: var(--charcoal);
+            font-weight:700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.3px;
+        }
+        .badge{
+            background: var(--mint-accent);
+            color: white;
+            font-weight:600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+        }
+
+        /*
+         KEY FIXES:
+         - Make each .item a row (flex) with left content and right actions.
+         - Ensure right actions have flex-shrink:0 and a min-width so they never overlap.
+         - Ensure parent container .fridge-items is overflow-visible so children are not clipped.
+         - Add z-index to action buttons so they remain on top.
+         - Add responsive fallback: stack on small screens.
+        */
+
+        .fridge-items {
+            overflow: visible;
+            margin-top:16px;
+        }
+
+        .fridge-items .item{
+            padding:18px;
+            border-radius:12px;
+            margin-bottom:12px;
+            border:1px solid var(--steel-light);
+            display:flex;
+            align-items:flex-start;
+            gap:16px;
+            background: white;
+            position:relative;
+            min-height:64px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fridge-items .item:hover {
+            background: var(--ice-white);
+            border-color: var(--ocean-accent);
+            transform: translateX(3px);
+            box-shadow: 0 3px 10px rgba(74, 85, 104, 0.08);
+        }
+
+        /* left content grows and can truncate */
+        .item-left {
+            min-width:0;
+            flex:1 1 auto;
+        }
+
+        .item-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:12px;
+        }
+        .item-name{
+            font-weight:700;
+            font-size:1.05rem;
+            color: var(--charcoal);
+            display:block;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .item-quantity{
+            background: var(--ocean-accent);
+            color: white;
+            padding:6px 14px;
+            border-radius:20px;
+            font-weight:700;
+            font-size: 0.85rem;
+            flex-shrink:0;
+            box-shadow: 0 2px 6px rgba(6, 182, 212, 0.2);
+        }
+
+        .item-details{
+            color: var(--text-secondary);
+            font-size:0.9rem;
+            margin-top:8px;
+        }
+        .item-details span { display:inline-block; margin-right:14px; vertical-align:middle; }
+
+        /* Right column for actions (REMOVE button etc.) */
+        .item-actions {
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+            align-items:flex-end;
+            flex-shrink:0;
+            min-width:96px;
+        }
+
+        /* Make sure action buttons are visible above card and not clipped */
+        .remove-btn{
+            background: #ef4444;
+            border:none;
+            color: white;
+            padding:9px 16px;
+            border-radius:8px;
+            font-weight:700;
+            font-size: 0.85rem;
+            cursor:pointer;
+            z-index:20;
+            position:relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+        }
+        .remove-btn:hover{ 
+            background: #dc2626;
+            transform:translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        .remove-btn:active{ transform:translateY(0) }
+
+        .expiry-warning{
+            background: var(--warning-orange);
+            color: white;
+            padding:6px 12px;
+            border-radius:20px;
+            font-weight:700;
+            font-size:0.75rem;
+            margin-left:8px;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+        }
+
+        /* Professional form inputs */
+        .form-group label{
+            display:block;
+            margin-bottom:8px;
+            color: var(--charcoal);
+            font-weight:600;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+        .form-group input,.form-group select{
+            width:100%;
+            padding:13px 16px;
+            border-radius:10px;
+            border:1px solid var(--steel-light);
+            background: white;
+            color: var(--charcoal);
+            font-size: 0.95rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        .form-group input:focus,.form-group select:focus{
+            outline:none;
+            border-color: var(--ocean-accent);
+            background: var(--ice-white);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        /* Professional buttons */
+        /* Professional buttons */
+        .btn{
+            padding:12px 22px;
+            border-radius:10px;
+            font-weight:600;
+            cursor:pointer;
+            border:none;
+            color: white;
+            display:inline-flex;
+            align-items:center;
+            gap:10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(74, 85, 104, 0.15);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 85, 104, 0.2);
+        }
+        .btn-primary{
+            background: var(--ocean-accent);
+        }
+        .btn-primary:hover {
+            background: #0891b2;
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+        }
+        .btn-secondary{
+            background: var(--mint-accent);
+        }
+        .btn-secondary:hover {
+            background: #059669;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+        .btn-outline{
+            background:white;
+            border:1px solid var(--steel-light);
+            color: var(--charcoal);
+        }
+        .btn-outline:hover {
+            background: var(--ice-white);
+            border-color: var(--ocean-accent);
+        }
+
+        .action-buttons{display:flex;gap:12px;flex-wrap:wrap}
+
+        /* Professional recipe cards */
+        .recipe-card{
+            border-radius:14px;
+            padding:26px;
+            margin-bottom:16px;
+            background: white;
+            border:1px solid var(--steel-light);
+            box-shadow: 0 2px 8px rgba(74, 85, 104, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .recipe-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(74, 85, 104, 0.12);
+            border-color: var(--mint-accent);
+        }
+        .recipe-card h3{
+            font-size:1.3rem;
+            margin-bottom:12px;
+            color: var(--charcoal);
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        .recipe-meta{
+            display:flex;
+            gap:20px;
+            color: var(--text-secondary);
+            margin-bottom:14px;
+            font-size: 0.9rem;
+        }
+        .recipe-ingredients{
+            color: var(--text-secondary);
+            line-height:1.8;
+        }
+
+        .voice-entry{
+            background: var(--ice-white);
+            padding:20px;
+            border-radius:12px;
+            border-left:4px solid var(--ocean-accent);
+            box-shadow: 0 2px 6px rgba(74, 85, 104, 0.06);
+            margin-bottom: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .voice-entry:hover {
+            transform: translateX(3px);
+            box-shadow: 0 4px 12px rgba(74, 85, 104, 0.1);
+        }
+        .voice-command{
+            font-weight:700;
+            color: var(--ocean-accent);
+            margin-bottom:10px;
+            font-size: 1.05rem;
+        }
+        .voice-response{
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        .voice-timestamp{
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        .voice-icon{
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        /* Professional scrollbars */
+        ::-webkit-scrollbar{width:10px;height:10px}
+        ::-webkit-scrollbar-track{
+            background: var(--frost-gray);
+        }
+        ::-webkit-scrollbar-thumb{
+            background: var(--steel-light);
+            border-radius:6px;
+        }
+        ::-webkit-scrollbar-thumb:hover{
+            background: var(--text-muted);
+        }
+
+        .notification{
+            position:fixed;
+            top:20px;
+            right:20px;
+            background: white;
+            padding:18px 22px;
+            border-radius:12px;
+            box-shadow: 0 8px 24px rgba(74, 85, 104, 0.15);
+            display:none;
+            z-index:1000;
+            border: 1px solid var(--steel-light);
+            color: var(--charcoal);
+        }
+        .notification.show{display:flex}
+        .notification-icon{
+            font-size: 1.5rem;
+            margin-right: 14px;
+        }
+
+        @media (max-width:900px){
+            .grid{grid-template-columns:1fr}
+            header{text-align:center}
+            header h1{font-size:1.6rem}
+            /* On small screens stack actions under content */
+            .fridge-items .item{flex-direction:column; align-items:stretch; min-height: auto}
+            .item-actions { align-items:flex-start; min-width: auto; margin-top:8px; }
+            .item-header { align-items:center; }
+            .item-name { white-space:normal; display:block; overflow:visible; text-overflow:unset; }
+        }
+
+        /* Camera Mini-Player Styles */
+        .camera-miniplayer {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            height: 360px;
+            background: var(--deep-navy);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid var(--steel-light);
+        }
+
+        .camera-miniplayer:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            border-color: var(--ocean-accent);
+        }
+
+        .camera-miniplayer.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) !important;
+            width: 90vw;
+            height: 90vh;
+            max-width: 1400px;
+            max-height: 900px;
+            z-index: 9999;
+            animation: expandCamera 0.3s ease;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 16px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .camera-miniplayer.expanded .camera-overlay {
+            padding: 24px;
+            font-size: 1.1rem;
+        }
+
+        /* Backdrop for expanded view */
+        .camera-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent; /* No dark overlay */
+            z-index: 9998;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes expandCamera {
+            from {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification">
+        <div class="notification-icon">✨</div>
+        <div>
+            <div style="font-weight: 700; margin-bottom: 4px;">Success</div>
+            <div style="font-size: 0.95rem; opacity: 0.9;">Item added to inventory</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Smart Fridge System</h1>
+            <p>Intelligent Inventory Management</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-value" id="totalItems">8</div>
+                <div class="stat-label">Total Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="expiringCount">2</div>
+                <div class="stat-label">Expiring Soon</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="expiredCount">0</div>
+                <div class="stat-label">Expired Items</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="freshCount">6</div>
+                <div class="stat-label">Fresh Items</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Dashboard - Current Fridge Items -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <div class="card-icon">📊</div>
+                        Fridge Inventory
+                    </h2>
+                    <span class="badge" id="itemCount">8 items</span>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="cameraBtn" onclick="toggleCamera()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <span id="cameraBtnText">Start Camera Detection</span>
+                    </button>
+                </div>
+
+                <!-- Camera Mini-Player -->
+                <div id="cameraContainer" style="display: none; margin-top: 16px; position: relative;">
+                    <div id="cameraMiniplayer" class="camera-miniplayer" onclick="toggleCameraSize()">
+                        <img id="cameraStream" src="" alt="Camera Feed" style="width: 100%; height: 100%; object-fit: contain;">
+                        <div class="camera-overlay">
+                            <span style="font-size: 0.85rem;">🎥 Live Detection</span>
+                            <span style="font-size: 0.75rem; opacity: 0.8;">Click to expand</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NOTE: .fridge-items uses overflow:visible (CSS) so children are never clipped -->
+                <div class="fridge-items" id="fridgeItems">
+                    <!-- Static examples use new structure: .item-left and .item-actions -->
+                    <div class="item" data-id="demo-1">
+                        <div class="item-left">
+                            <div class="item-header">
+                                <span class="item-name">Whole Milk</span>
+                                <span class="item-quantity">2L</span>
+                            </div>
+                            <div class="item-details">
+                                <span>📅 Expires: Nov 5, 2025</span>
+                                <span>📍 Door Shelf</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline remove-btn" data-id="demo-1">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="item" data-id="demo-2">
+                        <div class="item-left">
+                            <div class="item-header">
+                                <span class="item-name">Free-Range Eggs (very very long name to test truncation)</span>
+                                <span class="item-quantity">12 pcs</span>
+                            </div>
+                            <div class="item-details">
+                                <span>📅 Expires: Nov 10, 2025</span>
+                                <span>📍 Top Shelf</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline remove-btn" data-id="demo-2">Remove</button>
+                        </div>
+                    </div>
+
+                    <!-- more static items omitted for brevity -->
+                </div>
+            </div>
+
+            <!-- Add New Item Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>
+                        <div class="card-icon">➕</div>
+                        Add New Item
+                    </h2>
+                </div>
+                <form id="addItemForm">
+                    <div class="form-group">
+                        <label for="itemName">Item Name</label>
+                        <input type="text" id="itemName" placeholder="Enter item name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemQuantity">Quantity</label>
+                        <input type="text" id="itemQuantity" placeholder="e.g., 2L, 12 pcs, 500g" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="date" id="expiryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Storage Location</label>
+                        <select id="location" required>
+                            <option value="">Select location...</option>
+                            <option value="Top Shelf">Top Shelf</option>
+                            <option value="Middle Shelf">Middle Shelf</option>
+                            <option value="Bottom Shelf">Bottom Shelf</option>
+                            <option value="Door Shelf">Door Shelf</option>
+                            <option value="Crisper">Crisper</option>
+                            <option value="Drawer">Drawer</option>
+                            <option value="Freezer">Freezer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add to Inventory
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Recipe Suggestions -->
+        <div class="card" style="margin-top:20px;">
+            <div class="card-header">
+                <h2>
+                    <div class="card-icon">🍽️</div>
+                    Recipe Suggestions
+                </h2>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="generateRecipe()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Generate Custom Recipe
+                </button>
+            </div>
+            <div id="recipeList">
+                <div style="padding:18px 12px; color:#5b6b60; font-style:italic;">No recipe suggestions yet — click "Generate Custom Recipe" to create suggestions from your current inventory.</div>
+            </div>
+        </div>
+
+        <!-- Voice Query Log -->
+        <div class="card" style="margin-top:20px;">
+            <div class="card-header">
+                <h2>
+                    <div class="card-icon">🎙️</div>
+                    Voice Assistant Log
+                </h2>
+            </div>
+            
+            <!-- Professional Language Selector -->
+            <div style="padding: 20px; background: var(--ice-white); border-bottom: 2px solid var(--frost-gray); border-radius: 12px 12px 0 0;">
+                <label style="font-weight: 600; margin-right: 12px; color: var(--charcoal); font-size: 0.95rem; display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 1.2rem;">🌐</span>
+                    Response Language:
+                </label>
+                <select id="languageSelect" style="padding: 11px 16px; border-radius: 10px; border: 1px solid var(--steel-light); font-size: 14px; min-width: 220px; cursor: pointer; background: white; color: var(--charcoal); font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" onfocus="this.style.borderColor='var(--ocean-accent)'; this.style.boxShadow='0 0 0 3px rgba(6, 182, 212, 0.1)';" onblur="this.style.borderColor='var(--steel-light)'; this.style.boxShadow='none';">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी (Hindi)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                    <option value="ta">தமிழ் (Tamil)</option>
+                    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                    <option value="ml">മലയാളം (Malayalam)</option>
+                    <option value="mr">मराठी (Marathi)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="gu">ગુજરાતી (Gujarati)</option>
+                    <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                </select>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); padding: 10px 14px; background: white; border-radius: 8px; border-left: 3px solid var(--mint-accent); display: inline-block;">
+                    💡 Tip: Speak in any language — responses adapt to your selection
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="voiceQueryBtn" class="btn btn-outline" onclick="runVoiceQuery()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                    Run Voice Query
+                </button>
+                <button id="stopVoiceBtn" class="btn" onclick="stopVoiceQuery()" style="display: none; background: #ef4444; border: none; color: white; box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);" onmouseover="this.style.background='#dc2626'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)';" onmouseout="this.style.background='#ef4444'; this.style.boxShadow='0 2px 8px rgba(239, 68, 68, 0.25)';">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                    Stop
+                </button>
+            </div>
+            <div class="voice-log" id="voiceLog">
+                <div class="voice-entry">
+                    <div class="voice-command">
+                        <div class="voice-icon">▶</div>
+                        "What items are expiring soon?"
+                    </div>
+                    <div class="voice-response">Based on your current inventory, you have romaine lettuce expiring on November 2nd and cherry tomatoes expiring on November 3rd. I recommend prioritizing these items in your meal planning over the next two days.</div>
+                    <div class="voice-timestamp">Today at 2:45 PM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Prefer the same origin when the UI is served from the backend (e.g. via Flask)
+    const API_BASE = (typeof window !== 'undefined' && window.location && window.location.origin && window.location.origin !== 'null')
+        ? window.location.origin
+        : 'http://localhost:3001';
+
+        // Global variables for voice control
+        let currentRecognition = null;
+        let currentAudio = null;
+        let isVoiceQueryActive = false;
+
+        // Preload voices for smooth, lag-free speech synthesis with authentic accents
+        let voicesLoaded = false;
+        let voiceCache = {};
+
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                voicesLoaded = true;
+                
+                // Cache voices for each language for better performance
+                const languages = ['en-IN', 'hi-IN', 'te-IN', 'ta-IN', 'kn-IN', 'ml-IN', 'mr-IN', 'bn-IN', 'gu-IN', 'pa-IN'];
+                
+                languages.forEach(lang => {
+                    // For Telugu and other problematic languages, prioritize LOCAL voices over Google
+                    // Google voices have a bug where they only read numbers in some Indic scripts
+                    const langCode = lang.split('-')[0];
+                    
+                    if (langCode === 'te' || langCode === 'ta' || langCode === 'kn' || langCode === 'ml') {
+                        // For Telugu, Tamil, Kannada, Malayalam: LOCAL FIRST (better script support)
+                        voiceCache[lang] = 
+                            // Local native voices (better script rendering)
+                            voices.find(v => v.lang === lang && v.localService && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('swara') || v.name.toLowerCase().includes('heera'))) ||
+                            voices.find(v => v.lang === lang && v.localService) ||
+                            // Microsoft voices (better than Google for these scripts)
+                            voices.find(v => v.lang === lang && v.name.includes('Microsoft')) ||
+                            // Any native voice for exact locale
+                            voices.find(v => v.lang === lang) ||
+                            // Google as last resort (has bugs with these scripts)
+                            voices.find(v => v.lang === lang && v.name.includes('Google')) ||
+                            // Same language code, different region
+                            voices.find(v => v.lang.startsWith(lang.split('-')[0])) ||
+                            // Final fallback
+                            voices[0];
+                    } else {
+                        // For Hindi, English, etc: Google voices work fine
+                        voiceCache[lang] = 
+                            // Google female voices (best quality and accent - ONLINE)
+                            voices.find(v => v.lang === lang && v.name.includes('Google') && (v.name.toLowerCase().includes('female') || !v.name.toLowerCase().includes('male'))) ||
+                            // Any Google voice for the language
+                            voices.find(v => v.lang === lang && v.name.includes('Google')) ||
+                            // Local native female voices (offline but good)
+                            voices.find(v => v.lang === lang && v.localService && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('swara') || v.name.toLowerCase().includes('heera'))) ||
+                            // Local native voices (any gender)
+                            voices.find(v => v.lang === lang && v.localService) ||
+                            // Any native voice for the exact locale
+                            voices.find(v => v.lang === lang) ||
+                            // Same language code, different region
+                            voices.find(v => v.lang.startsWith(lang.split('-')[0])) ||
+                            // Final fallback
+                            voices[0];
+                    }
+                });
+                
+                console.log('✅ Voices loaded and cached for all languages');
+                console.log('📊 Total available voices:', voices.length);
+                
+                // Log which voices are being used for each language
+                languages.forEach(lang => {
+                    const voice = voiceCache[lang];
+                    if (voice) {
+                        const isGoogle = voice.name.includes('Google');
+                        const isMicrosoft = voice.name.includes('Microsoft');
+                        const typeLabel = isGoogle ? '🌐 Google' : isMicrosoft ? '🪟 Microsoft' : voice.localService ? '💾 Local' : '🔊 Online';
+                        console.log(`${lang}: ${voice.name} ${typeLabel} ${voice.localService ? '[Offline]' : '[Online]'}`);
+                    }
+                });
+                
+                // Special warning for Telugu
+                const teluguVoice = voiceCache['te-IN'];
+                if (teluguVoice && teluguVoice.name.includes('Google')) {
+                    console.warn(`⚠️ Telugu using Google voice - may only read numbers. Install local Telugu voice for better results.`);
+                    console.info(`💡 Install Telugu voice: Windows Settings → Language → Telugu → Options → Download Speech`);
+                }
+            }
+        }
+
+        // Load voices immediately and on change (for different browsers)
+        if (window.speechSynthesis) {
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            // Force load after delays (Chrome workaround for async voice loading)
+            setTimeout(loadVoices, 100);
+            setTimeout(loadVoices, 500);
+            setTimeout(loadVoices, 1000);
+        }
+
+        function showNotification(message = 'Item added to inventory', success = true) {
+            const notification = document.getElementById('notification');
+            const messageDiv = notification.querySelector('div > div:last-child');
+            const titleDiv = notification.querySelector('div > div:first-child');
+            
+            // Update title based on success/failure
+            titleDiv.textContent = success ? 'Success' : 'Error';
+            
+            // Update message
+            messageDiv.textContent = message;
+            
+            // Update icon
+            const icon = notification.querySelector('.notification-icon');
+            icon.textContent = success ? '✓' : '⚠';
+            
+            // Show notification
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str && str !== 0) return '';
+            return String(str).replace(/[&<>"'`]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;',"`":'&#96;'})[s]);
+        }
+
+        function parseDateOnly(input) {
+            if (!input) return null;
+            if (input instanceof Date) return new Date(Date.UTC(input.getFullYear(), input.getMonth(), input.getDate()));
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(input)) {
+                const [d, m, y] = input.split('/');
+                return new Date(Date.UTC(Number(y), Number(m) - 1, Number(d)));
+            }
+            const isoMatch = input.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (isoMatch) {
+                return new Date(Date.UTC(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3])));
+            }
+            const d = new Date(input);
+            if (isNaN(d)) return null;
+            return new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        }
+
+        function daysBetweenDates(a, b) {
+            const msPerDay = 24 * 60 * 60 * 1000;
+            return Math.round((Date.UTC(a.getFullYear(), a.getMonth(), a.getDate()) - Date.UTC(b.getFullYear(), b.getMonth(), b.getDate())) / msPerDay);
+        }
+
+        function computeStatus(expiryDateStr) {
+            const expiry = parseDateOnly(expiryDateStr);
+            if (!expiry) return { label: 'Unknown' };
+            const today = new Date();
+            const todayUtc = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
+            const remaining = daysBetweenDates(expiry, todayUtc);
+            if (remaining < 0) return { label: 'Expired' };
+            if (remaining === 0) return { label: 'Expires Today' };
+            if (remaining <= 3) return { label: 'Soon' };
+            return { label: 'Fresh' };
+        }
+
+        function formatDateUTC(d) {
+            if (!d) return '—';
+            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            return `${monthNames[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
+        }
+
+        function updateCounts(items) {
+            document.getElementById('itemCount').textContent = `${items.length} items`;
+            document.getElementById('totalItems').textContent = items.length;
+            let expiring = 0;
+            let expired = 0;
+            items.forEach(i => {
+                const st = computeStatus(i.expiry_date).label;
+                if (st === 'Soon' || st === 'Expires Today') expiring++;
+                if (st === 'Expired') expired++;
+            });
+            document.getElementById('expiringCount').textContent = expiring;
+            document.getElementById('expiredCount').textContent = expired;
+            document.getElementById('freshCount').textContent = items.length - expiring - expired;
+        }
+
+        function renderItems(items) {
+            const container = document.getElementById('fridgeItems');
+            container.innerHTML = '';
+
+            items.forEach(it => {
+                const expiryParsed = parseDateOnly(it.expiry_date);
+                const expiresText = expiryParsed ? formatDateUTC(expiryParsed) : '—';
+                const qty = it.quantity || '';
+                const status = computeStatus(it.expiry_date).label;
+                let statusBadge = '';
+                if (status === 'Expired') statusBadge = '<span class="expiry-warning">Expired</span>';
+                else if (status === 'Expires Today') statusBadge = '<span class="expiry-warning">Expires Today</span>';
+                else if (status === 'Soon') statusBadge = '<span class="expiry-warning">Soon</span>';
+
+                // UPDATED HTML: new structure .item-left and .item-actions ensures actions won't overlap
+                const itemHTML = `
+                    <div class="item" data-id="${it.id}">
+                        <div class="item-left">
+                            <div class="item-header">
+                                <span class="item-name">${escapeHtml(it.label)}</span>
+                                <span class="item-quantity">${escapeHtml(qty)}</span>
+                            </div>
+                            <div class="item-details">
+                                <span>📅 Expires: ${expiresText} ${statusBadge}</span>
+                                <span>📍 ${escapeHtml(it.location || '')}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-outline remove-btn" data-id="${it.id}" style="padding:6px 10px; font-size:0.9rem;">Remove</button>
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', itemHTML);
+            });
+
+            updateCounts(items);
+        }
+
+        // Event delegation for remove buttons
+        document.getElementById('fridgeItems').addEventListener('click', async (ev) => {
+            const btn = ev.target.closest('.remove-btn');
+            if (!btn) return;
+            const id = btn.getAttribute('data-id');
+            if (!id) return;
+            if (!confirm('Remove this item from inventory?')) return;
+            try {
+                console.log('DELETE', API_BASE + '/api/items/' + id);
+                const res = await fetch(API_BASE + '/api/items/' + id, { method: 'DELETE' });
+                if (!res.ok) throw new Error('Server returned ' + res.status);
+                const contentType = res.headers.get('content-type') || '';
+                let payload;
+                if (contentType.includes('application/json')) {
+                    payload = await res.json();
+                } else {
+                    const text = await res.text();
+                    throw new Error('Unexpected response from server: ' + (text || res.status));
+                }
+                if (!payload.success) throw new Error(payload.message || 'Failed to delete');
+                const el = document.querySelector(`.item[data-id="${id}"]`);
+                if (el) el.remove();
+                fetchInventory();
+                showNotification('Item removed', true);
+            } catch (err) {
+                console.error('Delete failed', err);
+                showNotification('Failed to remove item', false);
+            }
+        });
+
+        async function fetchInventory() {
+            try {
+                const res = await fetch(API_BASE + '/api/items');
+                if (!res.ok) throw new Error('Server returned ' + res.status);
+                const contentType = res.headers.get('content-type') || '';
+                let payload;
+                if (contentType.includes('application/json')) {
+                    payload = await res.json();
+                } else {
+                    const text = await res.text();
+                    throw new Error('Unexpected response from server: ' + (text || res.status));
+                }
+                if (!payload.success) throw new Error(payload.message || 'Failed to load items');
+                
+                // Compare with previous inventory to detect new items (don't show notification on every refresh)
+                const newItems = payload.data || [];
+                const previousCount = inventoryCache.length;
+                const newCount = newItems.length;
+                
+                inventoryCache = newItems;
+                renderItems(inventoryCache);
+                
+                // Only show notification if item count increased (new item added)
+                // Don't show on initial load or when items are removed
+                if (previousCount > 0 && newCount > previousCount) {
+                    showNotification(`✅ ${newCount - previousCount} new item(s) detected!`, true);
+                }
+            } catch (err) {
+                console.error('Failed to load inventory', err);
+                showNotification('Failed to load inventory', false);
+            }
+        }
+
+        document.getElementById('addItemForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('itemName').value.trim();
+            const quantity = document.getElementById('itemQuantity').value.trim();
+            const expiry = document.getElementById('expiryDate').value || null;
+            const location = document.getElementById('location').value || null;
+            if (!name) { alert('Please enter item name'); return; }
+            try {
+                console.log('POST', API_BASE + '/api/items', { label: name, quantity, expiry_date: expiry, location });
+                const res = await fetch(API_BASE + '/api/items', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ label: name, quantity, location, expiry_date: expiry })
+                });
+                if (!res.ok) throw new Error('Server returned ' + res.status);
+                const contentType = res.headers.get('content-type') || '';
+                let payload;
+                if (contentType.includes('application/json')) {
+                    payload = await res.json();
+                } else {
+                    const text = await res.text();
+                    throw new Error('Unexpected response from server: ' + (text || res.status));
+                }
+                console.log('POST response', payload);
+                if (!payload.success) throw new Error(payload.message || ('Server ' + res.status));
+                fetchInventory();
+                this.reset();
+                showNotification('Item saved to database', true);
+            } catch (err) {
+                console.error('Add item failed', err);
+                showNotification('Failed to add item', false);
+                alert('Failed to add item: ' + err.message);
+            }
+        });
+
+        let inventoryCache = [];
+
+        async function generateRecipe() {
+            try {
+                // Show loading state
+                const recipeList = document.getElementById('recipeList');
+                recipeList.innerHTML = '<div style="padding:18px 12px; color:#5b6b60; font-style:italic;">⏳ Generating recipes with AI based on your inventory...</div>';
+                
+                console.log('POST', API_BASE + '/api/generate_recipe');
+                const res = await fetch(API_BASE + '/api/generate_recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                
+                if (!res.ok) throw new Error('Server returned ' + res.status);
+                
+                const contentType = res.headers.get('content-type') || '';
+                let payload;
+                if (contentType.includes('application/json')) {
+                    payload = await res.json();
+                } else {
+                    const text = await res.text();
+                    throw new Error('Unexpected response from server: ' + (text || res.status));
+                }
+                
+                console.log('Generate recipe response', payload);
+                
+                if (!payload.success) {
+                    throw new Error(payload.message || 'Failed to generate recipes');
+                }
+                
+                // Clear loading and display recipes
+                recipeList.innerHTML = '';
+                
+                const recipes = payload.recipes || [];
+                if (recipes.length === 0) {
+                    recipeList.innerHTML = '<div style="padding:18px 12px; color:#5b6b60; font-style:italic;">No recipes generated. Try adding more items to your inventory.</div>';
+                    return;
+                }
+                
+                recipes.forEach(recipe => {
+                    const recipeHTML = `<div class="recipe-card" style="animation: fadeIn 0.5s ease;">
+                        <h3>${escapeHtml(recipe.title || 'Untitled Recipe')}</h3>
+                        <div class="recipe-meta">🥘 Ingredients: ${escapeHtml(recipe.ingredients || 'See instructions')}</div>
+                        <p class="recipe-ingredients" style="margin-top:10px; line-height:1.6;">${escapeHtml(recipe.instructions || 'No instructions provided.')}</p>
+                    </div>`;
+                    recipeList.insertAdjacentHTML('beforeend', recipeHTML);
+                });
+                
+                showNotification('Recipes generated successfully!', true);
+                
+            } catch (err) {
+                console.error('Generate recipe failed', err);
+                document.getElementById('recipeList').innerHTML = `<div style="padding:18px 12px; color:#e74c3c;">❌ Failed to generate recipes: ${err.message}</div>`;
+                showNotification('Failed to generate recipes', false);
+            }
+        }
+
+        function capitalizeFirst(s) {
+            if (!s) return s;
+            return s.replace(/(^|\s)\S/g, t => t.toUpperCase());
+        }
+
+        // Multilingual speech synthesis using server-side gTTS (Google Text-to-Speech)
+        async function speakInLanguage(text, languageCode) {
+            console.log(`🔊 Speaking in ${languageCode}: "${text.substring(0, 50)}..."`);
+            
+            // Cancel any ongoing speech
+            if (window.currentAudio) {
+                window.currentAudio.pause();
+                window.currentAudio = null;
+            }
+            
+            try {
+                // Call backend TTS endpoint
+                const response = await fetch(API_BASE + '/api/voice/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        language: languageCode
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`TTS request failed: ${response.status}`);
+                }
+                
+                // Get audio blob
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                console.log(`✅ TTS audio generated for ${languageCode}`);
+                
+                // Show stop button when audio starts playing
+                const voiceQueryBtn = document.getElementById('voiceQueryBtn');
+                const stopVoiceBtn = document.getElementById('stopVoiceBtn');
+                
+                // Create and play audio
+                const audio = new Audio(audioUrl);
+                window.currentAudio = audio;
+                
+                audio.playbackRate = languageCode === 'en' ? 1.0 : 1.1; // Faster for Indian languages
+                
+                audio.onplay = () => {
+                    console.log(`▶️ Started playing ${languageCode} audio`);
+                    // Show stop button when speaking starts
+                    voiceQueryBtn.style.display = 'none';
+                    stopVoiceBtn.style.display = 'inline-flex';
+                };
+                
+                audio.onended = () => {
+                    console.log('✅ Speech completed');
+                    URL.revokeObjectURL(audioUrl); // Clean up
+                    window.currentAudio = null;
+                    // Hide stop button when speech ends
+                    voiceQueryBtn.style.display = 'inline-flex';
+                    stopVoiceBtn.style.display = 'none';
+                };
+                
+                audio.onerror = (error) => {
+                    console.error('Audio playback error:', error);
+                    URL.revokeObjectURL(audioUrl);
+                    // Reset buttons on error
+                    voiceQueryBtn.style.display = 'inline-flex';
+                    stopVoiceBtn.style.display = 'none';
+                };
+                
+                await audio.play();
+                
+            } catch (error) {
+                console.error('TTS failed:', error);
+                // Fallback to browser TTS
+                speakWithBrowserTTS(text, languageCode);
+            }
+        }
+        
+        // Fallback: Browser TTS (used if ResponsiveVoice fails)
+        function speakWithBrowserTTS(text, languageCode) {
+            if (!('speechSynthesis' in window)) {
+                console.warn('Speech synthesis not supported');
+                return;
+            }
+            
+            window.speechSynthesis.cancel();
+            
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                const localeMap = {
+                    'en': 'en-IN', 'hi': 'hi-IN', 'te': 'te-IN', 'ta': 'ta-IN',
+                    'kn': 'kn-IN', 'ml': 'ml-IN', 'mr': 'mr-IN', 'bn': 'bn-IN',
+                    'gu': 'gu-IN', 'pa': 'pa-IN'
+                };
+                
+                const targetLocale = localeMap[languageCode] || 'en-IN';
+                const selectedVoice = voiceCache[targetLocale];
+                
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+                
+                utterance.lang = targetLocale;
+                utterance.rate = languageCode === 'en' ? 0.95 : 0.5;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                console.log(`🔊 Fallback to browser TTS for ${languageCode}`);
+                window.speechSynthesis.speak(utterance);
+            }, 100);
+        }
+
+        async function runVoiceQuery() {
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            
+            // Show stop button, hide start button
+            const voiceQueryBtn = document.getElementById('voiceQueryBtn');
+            const stopVoiceBtn = document.getElementById('stopVoiceBtn');
+            voiceQueryBtn.style.display = 'none';
+            stopVoiceBtn.style.display = 'inline-flex';
+            isVoiceQueryActive = true;
+            
+            // Check if browser supports speech recognition
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                alert('Voice recognition is not supported in your browser. Please use Chrome or Edge.');
+                voiceQueryBtn.style.display = 'inline-flex';
+                stopVoiceBtn.style.display = 'none';
+                return;
+            }
+            
+            const recognition = new SpeechRecognition();
+            currentRecognition = recognition;
+            
+            // Get selected language
+            const selectedLanguage = document.getElementById('languageSelect').value;
+            
+            // Map language codes to speech recognition locales
+            const speechRecognitionLangMap = {
+                'en': 'en-IN',
+                'hi': 'hi-IN',
+                'te': 'te-IN',
+                'ta': 'ta-IN',
+                'kn': 'kn-IN',
+                'ml': 'ml-IN',
+                'mr': 'mr-IN',
+                'bn': 'bn-IN',
+                'gu': 'gu-IN',
+                'pa': 'pa-IN'
+            };
+            
+            // Set recognition language based on selected response language
+            recognition.lang = speechRecognitionLangMap[selectedLanguage] || 'en-IN';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            
+            console.log(`🎤 Speech recognition set to: ${recognition.lang}`);
+            
+            // Show listening indicator
+            const listeningHTML = `<div class="voice-entry" style="animation: fadeIn 0.5s ease;">
+                <div class="voice-command"><div class="voice-icon">🎤</div>"Listening..."</div>
+                <div class="voice-response" style="color: var(--text-muted);">Speak your query now...</div>
+                <div class="voice-timestamp">Today at ${timestamp}</div>
+            </div>`;
+            document.getElementById('voiceLog').insertAdjacentHTML('afterbegin', listeningHTML);
+            
+            recognition.start();
+            console.log('Voice recognition started. Speak now...');
+            
+            recognition.onresult = async (event) => {
+                const userQuery = event.results[0][0].transcript;
+                console.log('Recognized speech:', userQuery);
+                
+                // Get selected language
+                const selectedLanguage = document.getElementById('languageSelect').value;
+                
+                // Update UI to show recognized query
+                const processingHTML = `<div class="voice-entry" style="animation: fadeIn 0.5s ease;">
+                    <div class="voice-command"><div class="voice-icon">▶</div>"${userQuery}"</div>
+                    <div class="voice-response" style="color: var(--text-muted);">Processing...</div>
+                    <div class="voice-timestamp">Today at ${timestamp}</div>
+                </div>`;
+                
+                const voiceLog = document.getElementById('voiceLog');
+                voiceLog.removeChild(voiceLog.firstChild); // Remove "Listening..." entry
+                voiceLog.insertAdjacentHTML('afterbegin', processingHTML);
+                
+                try {
+                    // Call the backend voice query API with language
+                    const response = await fetch(`${API_BASE}/api/voice/query`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            query: userQuery,
+                            language: selectedLanguage 
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Update the response with AI answer
+                    const responseHTML = `<div class="voice-entry" style="animation: fadeIn 0.5s ease;">
+                        <div class="voice-command"><div class="voice-icon">▶</div>"${userQuery}"</div>
+                        <div class="voice-response">${data.response}</div>
+                        <div class="voice-timestamp">Today at ${timestamp}</div>
+                    </div>`;
+                    
+                    // Replace the "Processing..." entry
+                    voiceLog.removeChild(voiceLog.firstChild);
+                    voiceLog.insertAdjacentHTML('afterbegin', responseHTML);
+                    
+                    // Speak response in selected language (stop button will show in speakInLanguage)
+                    await speakInLanguage(data.response, selectedLanguage);
+                    
+                } catch (error) {
+                    console.error('Error running voice query:', error);
+                    
+                    // Fallback to local response on error
+                    const fallbackResponse = "I'm having trouble connecting to the assistant. Please try again.";
+                    const errorHTML = `<div class="voice-entry" style="animation: fadeIn 0.5s ease;">
+                        <div class="voice-command"><div class="voice-icon">▶</div>"${userQuery}"</div>
+                        <div class="voice-response">${fallbackResponse}</div>
+                        <div class="voice-timestamp">Today at ${timestamp}</div>
+                    </div>`;
+                    
+                    voiceLog.removeChild(voiceLog.firstChild);
+                    voiceLog.insertAdjacentHTML('afterbegin', errorHTML);
+                    
+                    // Reset buttons
+                    voiceQueryBtn.style.display = 'inline-flex';
+                    stopVoiceBtn.style.display = 'none';
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                const voiceLog = document.getElementById('voiceLog');
+                
+                let errorMsg = 'Voice recognition error. Please try again.';
+                if (event.error === 'no-speech') {
+                    errorMsg = 'No speech detected. Please try again and speak clearly.';
+                } else if (event.error === 'not-allowed') {
+                    errorMsg = 'Microphone access denied. Please allow microphone access in your browser.';
+                }
+                
+                voiceLog.removeChild(voiceLog.firstChild);
+                voiceLog.insertAdjacentHTML('afterbegin', errorHTML);
+                
+                // Reset buttons
+                voiceQueryBtn.style.display = 'inline-flex';
+                stopVoiceBtn.style.display = 'none';
+                isVoiceQueryActive = false;
+                currentRecognition = null;
+            };
+            
+            recognition.onend = () => {
+                console.log('Voice recognition ended.');
+            };
+        }
+
+        // New function to stop voice query
+        function stopVoiceQuery() {
+            const voiceLog = document.getElementById('voiceLog');
+            const voiceQueryBtn = document.getElementById('voiceQueryBtn');
+            const stopVoiceBtn = document.getElementById('stopVoiceBtn');
+            
+            console.log('🛑 Stopping voice query and all TTS...');
+            
+            // Stop speech recognition
+            if (currentRecognition) {
+                try {
+                    currentRecognition.stop();
+                    currentRecognition.abort();
+                } catch (e) {
+                    console.log('Recognition already stopped');
+                }
+                currentRecognition = null;
+            }
+            
+            // Stop backend TTS audio playback
+            if (window.currentAudio) {
+                try {
+                    window.currentAudio.pause();
+                    window.currentAudio.currentTime = 0;
+                    window.currentAudio = null;
+                } catch (e) {
+                    console.log('Audio already stopped');
+                }
+            }
+            
+            // Stop browser speech synthesis
+            if (window.speechSynthesis) {
+                try {
+                    window.speechSynthesis.cancel();
+                } catch (e) {
+                    console.log('Speech synthesis already stopped');
+                }
+            }
+            
+            // Stop ResponsiveVoice if loaded
+            if (typeof responsiveVoice !== 'undefined' && responsiveVoice.isPlaying()) {
+                try {
+                    responsiveVoice.cancel();
+                    console.log('ResponsiveVoice stopped');
+                } catch (e) {
+                    console.log('ResponsiveVoice already stopped');
+                }
+            }
+            
+            // Reset state
+            isVoiceQueryActive = false;
+            
+            // Update UI with stopped message
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            const stopHTML = `<div class="voice-entry" style="animation: fadeIn 0.5s ease;">
+                <div class="voice-command"><div class="voice-icon">⏹️</div>"Stopped"</div>
+                <div class="voice-response" style="color: var(--text-muted);">Voice assistant stopped. All audio terminated. Click "Run Voice Query" to start again.</div>
+                <div class="voice-timestamp">Today at ${timestamp}</div>
+            </div>`;
+            
+            // Remove listening/processing entry if exists
+            if (voiceLog.firstChild && (voiceLog.firstChild.textContent.includes('Listening') || voiceLog.firstChild.textContent.includes('Processing'))) {
+                voiceLog.removeChild(voiceLog.firstChild);
+            }
+            voiceLog.insertAdjacentHTML('afterbegin', stopHTML);
+            
+            // Reset buttons
+            voiceQueryBtn.style.display = 'inline-flex';
+            stopVoiceBtn.style.display = 'none';
+            
+            console.log('✅ Voice query and all TTS stopped successfully');
+        }
+
+        // Add keyboard shortcut (ESC to stop)
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && isVoiceQueryActive) {
+                stopVoiceQuery();
+            }
+        });
+
+        // Auto-refresh inventory every 5 seconds to show camera-detected items
+        // This ensures new items appear without manual refresh
+        let autoRefreshInterval = setInterval(() => {
+            fetchInventory();
+        }, 5000); // Refresh every 5 seconds
+
+        // Stop auto-refresh when page is hidden (saves resources)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                clearInterval(autoRefreshInterval);
+            } else {
+                // Resume auto-refresh when page becomes visible
+                autoRefreshInterval = setInterval(() => {
+                    fetchInventory();
+                }, 5000);
+            }
+        });
+
+        // Camera Detection Control
+        let cameraRunning = false;
+        let cameraExpanded = false;
+
+        async function toggleCamera() {
+            const btn = document.getElementById('cameraBtn');
+            const btnText = document.getElementById('cameraBtnText');
+            const container = document.getElementById('cameraContainer');
+            const stream = document.getElementById('cameraStream');
+
+            if (!cameraRunning) {
+                // Start camera
+                try {
+                    btnText.textContent = 'Starting...';
+                    btn.disabled = true;
+
+                    // Start camera detection via backend
+                    const response = await fetch(API_BASE + '/api/camera/start', {
+                        method: 'POST'
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        cameraRunning = true;
+                        btnText.textContent = 'Stop Camera Detection';
+                        btn.classList.remove('btn-secondary');
+                        btn.classList.add('btn-primary');
+                        
+                        // Show camera container
+                        container.style.display = 'block';
+                        
+                        // Wait a moment for stream server to start
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        // Connect to stream
+                        stream.src = 'http://127.0.0.1:5001/video_feed?' + new Date().getTime();
+                        
+                        showNotification('📹 Camera detection started!', true);
+                    } else {
+                        throw new Error(result.message || 'Failed to start camera');
+                    }
+                } catch (error) {
+                    console.error('Error starting camera:', error);
+                    showNotification('❌ Failed to start camera: ' + error.message, false);
+                    btnText.textContent = 'Start Camera Detection';
+                } finally {
+                    btn.disabled = false;
+                }
+            } else {
+                // Stop camera
+                try {
+                    btnText.textContent = 'Stopping...';
+                    btn.disabled = true;
+
+                    // Stop camera detection via backend
+                    const response = await fetch(API_BASE + '/api/camera/stop', {
+                        method: 'POST'
+                    });
+                    const result = await response.json();
+
+                    if (result.success || result.status === 'stopped') {
+                        cameraRunning = false;
+                        btnText.textContent = 'Start Camera Detection';
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-secondary');
+                        
+                        // Hide camera container
+                        container.style.display = 'none';
+                        stream.src = '';
+                        
+                        // Collapse if expanded
+                        if (cameraExpanded) {
+                            toggleCameraSize();
+                        }
+                        
+                        showNotification('⏹️ Camera detection stopped', true);
+                    } else {
+                        throw new Error(result.message || 'Failed to stop camera');
+                    }
+                } catch (error) {
+                    console.error('Error stopping camera:', error);
+                    showNotification('❌ Failed to stop camera: ' + error.message, false);
+                } finally {
+                    btn.disabled = false;
+                }
+            }
+        }
+
+        function toggleCameraSize() {
+            const miniplayer = document.getElementById('cameraMiniplayer');
+            const body = document.body;
+
+            if (!cameraExpanded) {
+                // Expand to fullscreen
+                cameraExpanded = true;
+                
+                // Create backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'camera-backdrop';
+                backdrop.id = 'cameraBackdrop';
+                backdrop.onclick = toggleCameraSize;
+                body.appendChild(backdrop);
+                
+                // Expand miniplayer
+                miniplayer.classList.add('expanded');
+                
+                // Update overlay text
+                const overlay = miniplayer.querySelector('.camera-overlay span:last-child');
+                if (overlay) overlay.textContent = 'Click to minimize';
+            } else {
+                // Collapse to mini view
+                cameraExpanded = false;
+                
+                // Remove backdrop
+                const backdrop = document.getElementById('cameraBackdrop');
+                if (backdrop) backdrop.remove();
+                
+                // Collapse miniplayer
+                miniplayer.classList.remove('expanded');
+                
+                // Update overlay text
+                const overlay = miniplayer.querySelector('.camera-overlay span:last-child');
+                if (overlay) overlay.textContent = 'Click to expand';
+            }
+        }
+
+        // Check camera status on page load
+        async function checkCameraStatus() {
+            try {
+                const response = await fetch(API_BASE + '/api/camera/status');
+                const result = await response.json();
+                
+                if (result.status === 'running') {
+                    // Camera is already running, update UI
+                    cameraRunning = true;
+                    const btn = document.getElementById('cameraBtn');
+                    const btnText = document.getElementById('cameraBtnText');
+                    const container = document.getElementById('cameraContainer');
+                    const stream = document.getElementById('cameraStream');
+                    
+                    btnText.textContent = 'Stop Camera Detection';
+                    btn.classList.remove('btn-secondary');
+                    btn.classList.add('btn-primary');
+                    container.style.display = 'block';
+                    stream.src = 'http://127.0.0.1:5001/video_feed?' + new Date().getTime();
+                }
+            } catch (error) {
+                console.log('Camera status check failed (backend may not be ready)');
+            }
+        }
+
+        // Initialize
+        fetchInventory();
+        checkCameraStatus();
+    </script>
+</body>
+</html>
