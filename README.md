@@ -10,6 +10,7 @@ A full-stack intelligent fridge inventory manager that uses a YOLO-based camera 
 - Voice assistant: natural-language inventory queries, add/remove actions, recipe requests
 - Recipe suggestions: Google Gemini API (or local fallback)
 - Modern responsive UI with live camera feed
+- Edge deployment support: YOLO inference can run on an ESP S3 CAM (ESP32-S3-CAM) for on-device, low-latency detection
 
 ## Screenshots
 ![WhatsApp Image 2025-11-21 at 17 03 56_75d9cdb9](https://github.com/user-attachments/assets/77e93441-4580-4c96-91d4-213f406a2f53)
@@ -30,6 +31,9 @@ A full-stack intelligent fridge inventory manager that uses a YOLO-based camera 
 - TTS: gTTS
 - Frontend: HTML / CSS / JS
 - Misc: Flask-CORS, python-dotenv
+
+## Edge Deployment (ESP32-S3-CAM)
+This project supports deploying a lightweight YOLO-based model to an ESP32-S3-CAM (referred to here as "ESP S3 CAM") for on-device inference. Running inference at the edge reduces network bandwidth, lowers latency, and offloads continuous frame processing from the backend.
 
 ## Repo layout (key files)
 ~~~
