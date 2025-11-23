@@ -26,7 +26,7 @@ DB_NAME = os.getenv('DB_NAME', 'smartfridge')
 APP_PORT = int(os.getenv('PORT', '3001'))
 
 # Google Gemini API Key (FREE - get from https://aistudio.google.com/app/apikey)
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyAYOVBpByLUKdsyaFF7xRfKGwCLXt0MpEE')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'xxxxxxxxx')
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / 'folder'
